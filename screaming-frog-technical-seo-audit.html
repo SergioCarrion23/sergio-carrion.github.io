@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The exact Screaming Frog configuration I use on every new client — custom extraction rules, crawl settings for large sites, and what to look for first in the reports.">
+<meta name="keywords" content="screaming frog seo audit, screaming frog configuration, technical seo audit guide, screaming frog custom extraction, wordpress seo audit, seo crawl setup">
+<meta property="og:title" content="Setting up Screaming Frog for a full technical SEO audit — Sergio Carrión">
+<meta property="og:description" content="The exact configuration I use on every new client — custom extraction rules, crawl settings for large sites, and what to look for first.">
+<meta property="og:type" content="article">
+<meta name="author" content="Sergio Carrión">
+<link rel="canonical" href="https://sergio-carrion.github.io/blog/screaming-frog-technical-seo-audit.html">
+<title>Setting up Screaming Frog for a full technical SEO audit — Sergio Carrión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0c0e; --bg2: #111114; --bg3: #18181c; --surface: #1e1e24;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #e8e6e1; --muted: #7a7870; --accent: #4ade80; --accent-dim: rgba(74,222,128,0.1);
+    --serif: 'DM Serif Display', serif; --mono: 'DM Mono', monospace; --sans: 'Syne', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px; display: flex; justify-content: space-between; align-items: center;
+    background: rgba(12,12,14,0.92); border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.1em; text-decoration: none; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .article-hero { padding: 140px 0 80px; border-bottom: 1px solid var(--border); }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 48px; }
+  .container-wide { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 40px; transition: color 0.2s; }
+  .back-link:hover { color: var(--accent); }
+
+  .article-category { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 20px; }
+  .article-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 58px); line-height: 1.08; color: var(--text); margin-bottom: 24px; }
+  .article-title em { font-style: italic; color: var(--accent); }
+  .article-meta { display: flex; gap: 24px; align-items: center; font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 24px; border-top: 1px solid var(--border); }
+
+  .article-body { padding: 64px 0; }
+  .article-body h2 { font-family: var(--serif); font-size: 30px; color: var(--text); margin: 56px 0 20px; line-height: 1.2; }
+  .article-body h3 { font-family: var(--sans); font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.15em; margin: 36px 0 12px; text-transform: uppercase; }
+  .article-body p { font-size: 16px; line-height: 1.85; color: #c4c2bc; margin-bottom: 20px; }
+  .article-body strong { color: var(--text); font-weight: 600; }
+  .article-body em { color: var(--accent); font-style: italic; }
+  .article-body ul, .article-body ol { margin: 20px 0 20px 24px; }
+  .article-body li { font-size: 16px; line-height: 1.85; color: #c4c2bc; margin-bottom: 8px; }
+  .article-body li::marker { color: var(--accent); }
+
+  .callout { background: var(--accent-dim); border: 1px solid rgba(74,222,128,0.2); border-left: 3px solid var(--accent); padding: 20px 24px; margin: 32px 0; }
+  .callout p { margin: 0; color: var(--text); font-size: 15px; }
+  .callout-label { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+
+  .code-block { background: var(--bg3); border: 1px solid var(--border); padding: 24px 28px; margin: 28px 0; overflow-x: auto; font-family: var(--mono); font-size: 13px; color: #a8e6bc; line-height: 1.7; }
+  .code-block .comment { color: var(--muted); }
+  .code-block .key { color: #86e1fc; }
+  .code-block .val { color: #f9c86a; }
+
+  .step-grid { display: flex; flex-direction: column; gap: 0; margin: 32px 0; }
+  .step-item { display: grid; grid-template-columns: 48px 1fr; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .step-item:last-child { border-bottom: none; }
+  .step-num { font-family: var(--mono); font-size: 20px; color: var(--accent); font-weight: 500; padding-top: 2px; }
+  .step-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  .tab-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 16px; }
+  .tab-item { font-family: var(--mono); font-size: 12px; color: var(--text); background: var(--surface); border: 1px solid var(--border2); padding: 6px 14px; }
+  .tab-item.critical { border-color: rgba(226,75,74,0.4); color: #f09595; background: rgba(226,75,74,0.08); }
+  .tab-item.warning { border-color: rgba(239,159,39,0.4); color: #f9c86a; background: rgba(239,159,39,0.08); }
+  .tab-item.good { border-color: rgba(74,222,128,0.3); color: var(--accent); background: var(--accent-dim); }
+
+  .divider { width: 100%; height: 1px; background: var(--border); margin: 48px 0; }
+
+  .related-posts { background: var(--bg2); border-top: 1px solid var(--border); padding: 80px 0; }
+  .related-title { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px; }
+  .related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .related-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; text-decoration: none; color: inherit; display: block; transition: border-color 0.2s, transform 0.2s; }
+  .related-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .related-cat { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .related-name { font-family: var(--serif); font-size: 20px; color: var(--text); line-height: 1.3; margin-bottom: 8px; }
+  .related-arrow { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 16px; }
+
+  footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .footer-copy span { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .container, .container-wide { padding: 0 24px; }
+    .article-hero { padding: 100px 0 60px; }
+    .related-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">SC_DEV</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#projects">Projects</a></li>
+    <li><a href="../index.html#blog">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <div class="article-hero">
+    <div class="container">
+      <a href="../index.html#blog" class="back-link">← Back to blog</a>
+      <div class="article-category">Technical SEO · Tools</div>
+      <h1 class="article-title">Setting up Screaming Frog for a<br><em>full technical SEO audit</em></h1>
+      <div class="article-meta">
+        <span>Sergio Carrión</span>
+        <span>·</span>
+        <span>6 min read</span>
+        <span>·</span>
+        <span>Technical SEO</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="container">
+
+      <p>Screaming Frog is the most powerful SEO crawling tool available — and most people use about 20% of what it can do. They run a crawl with default settings, look at the 404 tab, and call it an audit. That's not an audit. This is the configuration I use on every new site before I touch anything.</p>
+
+      <p>I'll cover the setup, the custom extractions that catch what the default tabs miss, and the exact order in which I review the reports.</p>
+
+      <h2>Before you crawl: configuration that matters</h2>
+
+      <p>The default settings are fine for a basic crawl. But for a real audit, change these before you start:</p>
+
+      <h3>Crawl settings</h3>
+
+      <div class="code-block"><span class="comment">// Configuration → Speed</span>
+<span class="key">Crawl Speed:</span>         <span class="val">5–10 threads</span>  <span class="comment">// Don't hammer shared hosting</span>
+<span class="key">Crawl Delay:</span>         <span class="val">0.5s</span>           <span class="comment">// Polite crawling</span>
+<span class="key">Max URL:</span>             <span class="val">Leave unlimited for full audits</span>
+
+<span class="comment">// Configuration → Spider</span>
+<span class="key">Crawl linked XML sitemaps:</span>  <span class="val">YES</span>
+<span class="key">Check source code:</span>          <span class="val">YES</span>  <span class="comment">// Catches noindex in JS</span>
+<span class="key">Crawl outside of start:</span>     <span class="val">NO</span>   <span class="comment">// Stay on domain</span>
+<span class="key">Respect nofollow:</span>           <span class="val">NO</span>   <span class="comment">// Audit all links</span></div>
+
+      <h3>Connect Google Search Console</h3>
+      <p>This is the step most people skip. Go to <strong>Configuration → API Access → Google Search Console</strong> and connect your account. This pulls real click and impression data into the crawl — so you can see which pages get traffic and which are crawled but never clicked. Game-changing for prioritization.</p>
+
+      <div class="callout">
+        <div class="callout-label">Pro tip</div>
+        <p>If the site has a staging environment, crawl that first. You can test fixes without affecting the live site's crawl budget.</p>
+      </div>
+
+      <h2>Custom extractions — what the default tabs miss</h2>
+
+      <p>The default tabs show you titles, meta descriptions, response codes, and headings. Useful, but incomplete. Custom extractions are where you find the issues that no one else is catching.</p>
+
+      <p>Go to <strong>Configuration → Custom → Extraction</strong> and add these:</p>
+
+      <div class="code-block"><span class="comment">// Extract 1: Canonical URL (detect self-referencing vs wrong canonicals)</span>
+<span class="key">Name:</span>    <span class="val">Canonical</span>
+<span class="key">Extract:</span> <span class="val">XPath</span>
+<span class="key">XPath:</span>   <span class="val">//link[@rel='canonical']/@href</span>
+
+<span class="comment">// Extract 2: noindex check (catches JS-rendered noindex)</span>
+<span class="key">Name:</span>    <span class="val">Robots Meta</span>
+<span class="key">Extract:</span> <span class="val">XPath</span>
+<span class="key">XPath:</span>   <span class="val">//meta[@name='robots']/@content</span>
+
+<span class="comment">// Extract 3: H1 count (detect pages with multiple H1s)</span>
+<span class="key">Name:</span>    <span class="val">H1 Count</span>
+<span class="key">Extract:</span> <span class="val">CSSPath</span>
+<span class="key">CSS:</span>     <span class="val">h1</span>
+<span class="key">Extract:</span> <span class="val">Count</span>
+
+<span class="comment">// Extract 4: Structured data presence</span>
+<span class="key">Name:</span>    <span class="val">Schema Type</span>
+<span class="key">Extract:</span> <span class="val">XPath</span>
+<span class="key">XPath:</span>   <span class="val">//script[@type='application/ld+json']</span></div>
+
+      <h2>The audit order — where to look first</h2>
+
+      <p>After the crawl finishes, I review tabs in this exact order. The reason for the order: critical technical blockers first, then content issues, then optimization opportunities.</p>
+
+      <div class="step-grid">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">Response Codes → 3xx and 4xx</div>
+            <div class="step-desc">Redirect chains longer than 2 hops waste crawl budget and lose link equity. Broken links (4xx) hurt UX and can cause crawl errors in GSC. Fix these first.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">Directives → Indexability</div>
+            <div class="step-desc">Filter by "noindex" and cross-reference with GSC. You'd be surprised how many important pages are accidentally blocked. Check your Custom Extraction "Robots Meta" column here.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">Page Titles → Duplicates and missing</div>
+            <div class="step-desc">Sort by "Occurrences" to find duplicate titles. Filter for "Missing" to catch pages with no title at all. Both are easy wins.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">Canonicals → Self-referencing check</div>
+            <div class="step-desc">Use your custom "Canonical" extraction. Every indexable page should have a canonical pointing to itself. Pages with no canonical or a canonical pointing to a different URL need investigation.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">05</div>
+          <div>
+            <div class="step-title">Images → Missing alt text and oversized files</div>
+            <div class="step-desc">Filter for images over 100KB and images with no alt text. Both affect performance and accessibility rankings.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">06</div>
+          <div>
+            <div class="step-title">Internal → Orphan pages</div>
+            <div class="step-desc">Go to Reports → Crawl Analysis → Orphan pages. These are URLs in your sitemap that have zero internal links pointing to them. Google can find them but won't assign much authority.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>What each tab status color means</h2>
+
+      <p>When I export the full report, I color-code issues into three priority tiers:</p>
+
+      <div class="tab-list">
+        <span class="tab-item critical">Fix immediately</span>
+        <span class="tab-item critical">Noindex on key pages</span>
+        <span class="tab-item critical">Redirect loops</span>
+        <span class="tab-item critical">Missing canonicals</span>
+      </div>
+      <div class="tab-list">
+        <span class="tab-item warning">Fix this sprint</span>
+        <span class="tab-item warning">Duplicate titles</span>
+        <span class="tab-item warning">Redirect chains 3+</span>
+        <span class="tab-item warning">Missing H1</span>
+      </div>
+      <div class="tab-list">
+        <span class="tab-item good">Optimization</span>
+        <span class="tab-item good">Title length</span>
+        <span class="tab-item good">Missing alt text</span>
+        <span class="tab-item good">Schema markup</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>Saving your configuration</h2>
+
+      <p>Once you've set up custom extractions and connected GSC, save the configuration: <strong>File → Configuration → Save</strong>. Name it per client. Next time you audit that site, load the saved config and run the crawl — no setup needed.</p>
+
+      <div class="callout">
+        <div class="callout-label">Final thought</div>
+        <p>A Screaming Frog audit is a starting point, not a final answer. The tool tells you what is wrong — you still need to understand why it's wrong and what the fix will cost vs. what it will gain. Prioritize by potential impact, not by the number of issues in a tab.</p>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<section class="related-posts">
+  <div class="container-wide">
+    <div class="related-title">Continue reading</div>
+    <div class="related-grid">
+      <a href="core-web-vitals-wordpress-optimization.html" class="related-card">
+        <div class="related-cat">Performance · SEO</div>
+        <div class="related-name">How I improved Core Web Vitals from 45 to 92 on a WordPress site</div>
+        <div class="related-arrow">Read article →</div>
+      </a>
+      <a href="wordpress-vs-custom-html-seo.html" class="related-card">
+        <div class="related-cat">WordPress · SEO</div>
+        <div class="related-name">WordPress vs custom HTML for SEO: what actually matters</div>
+        <div class="related-arrow">Read article →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">© 2025 <span>Sergio Carrión</span> · <a href="../index.html" style="color:var(--muted);text-decoration:none;">Back to portfolio</a></div>
+  <div class="footer-copy">Web Developer & SEO Specialist</div>
+</footer>
+
+</body>
+</html>

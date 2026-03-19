@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A real audit walkthrough — the exact plugins causing LCP failures, the caching config that fixed TTFB, and the image pipeline that eliminated CLS on a WordPress site.">
+<meta name="keywords" content="core web vitals wordpress, improve lcp wordpress, wordpress performance optimization, fix cls wordpress, ttfb wordpress, pagespeed wordpress">
+<meta property="og:title" content="How I improved Core Web Vitals from 45 to 92 on a WordPress site — Sergio Carrión">
+<meta property="og:description" content="A real audit walkthrough — the exact plugins causing LCP failures, the caching config that fixed TTFB, and the image pipeline that eliminated CLS.">
+<meta property="og:type" content="article">
+<meta name="author" content="Sergio Carrión">
+<link rel="canonical" href="https://sergio-carrion.github.io/blog/core-web-vitals-wordpress-optimization.html">
+<title>How I improved Core Web Vitals from 45 to 92 on a WordPress site — Sergio Carrión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0c0e; --bg2: #111114; --bg3: #18181c; --surface: #1e1e24;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #e8e6e1; --muted: #7a7870; --accent: #4ade80; --accent-dim: rgba(74,222,128,0.1);
+    --serif: 'DM Serif Display', serif; --mono: 'DM Mono', monospace; --sans: 'Syne', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px; display: flex; justify-content: space-between; align-items: center;
+    background: rgba(12,12,14,0.92); border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.1em; text-decoration: none; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .article-hero {
+    padding: 140px 0 80px;
+    border-bottom: 1px solid var(--border);
+  }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 48px; }
+  .container-wide { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 40px; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .article-category {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 20px;
+  }
+
+  .article-title {
+    font-family: var(--serif); font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.08; color: var(--text); margin-bottom: 24px; letter-spacing: -0.01em;
+  }
+  .article-title em { font-style: italic; color: var(--accent); }
+
+  .article-meta {
+    display: flex; gap: 24px; align-items: center;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    padding-top: 24px; border-top: 1px solid var(--border);
+  }
+  .article-meta span { display: flex; align-items: center; gap: 6px; }
+
+  .score-bar {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--surface); border: 1px solid var(--border2);
+    padding: 28px 32px; margin: 48px 0; position: relative; overflow: hidden;
+  }
+  .score-bar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+  .score-from { font-family: var(--serif); font-size: 52px; color: #e24b4a; line-height: 1; }
+  .score-arrow { font-size: 24px; color: var(--muted); }
+  .score-to { font-family: var(--serif); font-size: 52px; color: var(--accent); line-height: 1; }
+  .score-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+  .article-body { padding: 64px 0; }
+  .article-body h2 {
+    font-family: var(--serif); font-size: 30px; color: var(--text);
+    margin: 56px 0 20px; line-height: 1.2;
+  }
+  .article-body h3 {
+    font-family: var(--sans); font-size: 16px; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.05em; margin: 36px 0 12px;
+    text-transform: uppercase; font-size: 12px; letter-spacing: 0.15em;
+  }
+  .article-body p { font-size: 16px; line-height: 1.85; color: #c4c2bc; margin-bottom: 20px; }
+  .article-body strong { color: var(--text); font-weight: 600; }
+  .article-body em { color: var(--accent); font-style: italic; }
+  .article-body ul, .article-body ol { margin: 20px 0 20px 24px; }
+  .article-body li { font-size: 16px; line-height: 1.85; color: #c4c2bc; margin-bottom: 8px; }
+  .article-body li::marker { color: var(--accent); }
+
+  .callout {
+    background: var(--accent-dim); border: 1px solid rgba(74,222,128,0.2);
+    border-left: 3px solid var(--accent); padding: 20px 24px; margin: 32px 0;
+  }
+  .callout p { margin: 0; color: var(--text); font-size: 15px; }
+  .callout-label { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+
+  .code-block {
+    background: var(--bg3); border: 1px solid var(--border);
+    padding: 24px 28px; margin: 28px 0; overflow-x: auto;
+    font-family: var(--mono); font-size: 13px; color: #a8e6bc; line-height: 1.7;
+  }
+  .code-block .comment { color: var(--muted); }
+  .code-block .key { color: #86e1fc; }
+  .code-block .val { color: #f9c86a; }
+
+  .metrics-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0;
+  }
+  .metric-card {
+    background: var(--surface); border: 1px solid var(--border); padding: 20px 24px;
+  }
+  .metric-name { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .metric-before { font-family: var(--mono); font-size: 13px; color: #e24b4a; margin-bottom: 4px; }
+  .metric-after { font-family: var(--serif); font-size: 28px; color: var(--accent); line-height: 1; }
+  .metric-unit { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  .divider { width: 100%; height: 1px; background: var(--border); margin: 48px 0; }
+
+  .related-posts { background: var(--bg2); border-top: 1px solid var(--border); padding: 80px 0; }
+  .related-title { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px; }
+  .related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .related-card {
+    background: var(--surface); border: 1px solid var(--border); padding: 28px;
+    text-decoration: none; color: inherit; display: block; transition: border-color 0.2s, transform 0.2s;
+  }
+  .related-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .related-cat { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .related-name { font-family: var(--serif); font-size: 20px; color: var(--text); line-height: 1.3; margin-bottom: 8px; }
+  .related-arrow { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 16px; }
+
+  footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .footer-copy span { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .container, .container-wide { padding: 0 24px; }
+    .article-hero { padding: 100px 0 60px; }
+    .metrics-grid { grid-template-columns: 1fr; }
+    .related-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .score-from, .score-to { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">SC_DEV</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#projects">Projects</a></li>
+    <li><a href="../index.html#blog">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <div class="article-hero">
+    <div class="container">
+      <a href="../index.html#blog" class="back-link">← Back to blog</a>
+      <div class="article-category">Performance · SEO · WordPress</div>
+      <h1 class="article-title">How I improved Core Web Vitals<br>from <em>45 to 92</em> on a WordPress site</h1>
+      <div class="article-meta">
+        <span>Sergio Carrión</span>
+        <span>·</span>
+        <span>8 min read</span>
+        <span>·</span>
+        <span>WordPress Performance</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="container">
+
+      <div class="score-bar">
+        <div>
+          <div class="score-from">45</div>
+          <div class="score-label">Before</div>
+        </div>
+        <div class="score-arrow">→</div>
+        <div>
+          <div class="score-to">92</div>
+          <div class="score-label">After</div>
+        </div>
+        <div style="margin-left:auto;">
+          <div style="font-family:var(--mono);font-size:12px;color:var(--muted);">PageSpeed Insights</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:4px;">Mobile score</div>
+        </div>
+      </div>
+
+      <p>A score of 45 on mobile PageSpeed is more common than people think — and it almost always comes from the same handful of causes. This is a real walkthrough of an audit I ran on a WordPress site for a US real estate client. I'll show you exactly what I found, what I fixed, and in what order.</p>
+
+      <p>No generic tips. No "install WP Rocket and call it a day." This is the actual process.</p>
+
+      <h2>Step 1 — Run the real audit first</h2>
+
+      <p>Before touching anything, I always start with three tools in this order:</p>
+      <ol>
+        <li><strong>Google PageSpeed Insights</strong> — for the CWV scores and field data (real user data from CrUX)</li>
+        <li><strong>WebPageTest</strong> — for the waterfall chart and third-party breakdown</li>
+        <li><strong>Chrome DevTools Performance tab</strong> — to trace exactly what's blocking the main thread</li>
+      </ol>
+
+      <p>The mistake most people make is going straight to PageSpeed and treating the "Opportunities" list as a to-do list. That list is generic. The waterfall is where the real story is.</p>
+
+      <div class="callout">
+        <div class="callout-label">Key insight</div>
+        <p>Field data (from CrUX) is what actually affects your rankings. Lab data is just a diagnostic tool. Always look at field data first — if you don't have enough traffic to populate it, focus on lab data with a throttled mobile connection.</p>
+      </div>
+
+      <h2>What I found in the initial audit</h2>
+
+      <p>The site had a score of 45 on mobile. Here's what the metrics looked like before any changes:</p>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-name">LCP</div>
+          <div class="metric-before">Before: 7.2s</div>
+          <div class="metric-after">2.1s</div>
+          <div class="metric-unit">Largest Contentful Paint</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">TTFB</div>
+          <div class="metric-before">Before: 1,840ms</div>
+          <div class="metric-after">320ms</div>
+          <div class="metric-unit">Time to First Byte</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-name">CLS</div>
+          <div class="metric-before">Before: 0.38</div>
+          <div class="metric-after">0.02</div>
+          <div class="metric-unit">Cumulative Layout Shift</div>
+        </div>
+      </div>
+
+      <p>Three separate problems causing three separate failures. Let me break down exactly what caused each one.</p>
+
+      <h2>Problem 1 — LCP: the hero image was loading too late</h2>
+
+      <p>LCP at 7.2s on mobile is bad. The largest element on the page — the hero image — was being loaded by a lazy-loaded slider plugin. The browser was:</p>
+      <ul>
+        <li>Waiting for JavaScript to parse and execute</li>
+        <li>Then rendering the slider plugin</li>
+        <li>Then discovering the image</li>
+        <li>Then downloading it at full resolution (2400px wide, 380KB)</li>
+      </ul>
+
+      <p>The fix had three parts.</p>
+
+      <h3>Fix 1a — Preload the LCP image</h3>
+      <p>Add this to <code>&lt;head&gt;</code> — it tells the browser to start downloading the image immediately, before it even parses the body:</p>
+
+      <div class="code-block"><span class="comment">&lt;!-- Add to wp_head via functions.php --&gt;</span>
+&lt;link rel="<span class="val">preload</span>"
+      as="<span class="val">image</span>"
+      href="<span class="val">/wp-content/uploads/hero.webp</span>"
+      fetchpriority="<span class="val">high</span>"&gt;</div>
+
+      <h3>Fix 1b — Replace the slider with a static hero</h3>
+      <p>The slider plugin was adding 47KB of JavaScript and 12KB of CSS that blocked rendering. For a hero image that almost nobody interacted with, this was an expensive trade. I replaced it with a static <code>&lt;img&gt;</code> tag with <code>fetchpriority="high"</code> and <code>loading="eager"</code>.</p>
+
+      <h3>Fix 1c — Convert and resize the image</h3>
+      <p>The original PNG was 2400×1200px at 380KB. Mobile users don't need that. I:</p>
+      <ul>
+        <li>Converted to WebP (saved 62%)</li>
+        <li>Created responsive sizes with <code>srcset</code>: 480w, 768w, 1200w</li>
+        <li>Added explicit <code>width</code> and <code>height</code> attributes (this also helps CLS)</li>
+      </ul>
+
+      <p>LCP dropped from 7.2s to 2.1s with just these three changes.</p>
+
+      <h2>Problem 2 — TTFB: the server was slow before it sent a single byte</h2>
+
+      <p>A TTFB of 1,840ms means the server was taking almost 2 seconds before sending the first byte of HTML. This is usually a PHP/database problem, not a frontend problem.</p>
+
+      <p>On this site it was caused by a combination of:</p>
+      <ul>
+        <li><strong>No page caching</strong> — every request was running PHP and hitting the database</li>
+        <li><strong>12 active plugins making database queries on every page load</strong> — including 3 that were only used in the admin dashboard but still loaded on frontend</li>
+        <li><strong>Shared hosting without object caching</strong></li>
+      </ul>
+
+      <h3>Fix 2a — Install and configure page caching</h3>
+      <p>I installed WP Rocket and configured it with these specific settings that most people miss:</p>
+
+      <div class="code-block"><span class="comment">// WP Rocket config that actually matters</span>
+<span class="key">Cache lifespan:</span>          <span class="val">10 hours</span>
+<span class="key">Separate cache for mobile:</span> <span class="val">YES (critical if you have a mobile theme)</span>
+<span class="key">Cache preloading:</span>          <span class="val">ON + sitemap-based</span>
+<span class="key">Remove query strings:</span>      <span class="val">ON</span>
+<span class="key">DNS prefetch:</span>              <span class="val">Add Google Fonts, GTM, analytics domains</span></div>
+
+      <h3>Fix 2b — Disable plugins on frontend when not needed</h3>
+      <p>Used the <strong>Asset CleanUp</strong> plugin to disable 3 heavy plugins (a backup plugin, an admin-only SEO plugin, and a WooCommerce remnant) from loading on frontend pages. This alone removed 180KB of JavaScript from every page load.</p>
+
+      <p>TTFB went from 1,840ms to 320ms.</p>
+
+      <h2>Problem 3 — CLS: things were jumping around on load</h2>
+
+      <p>CLS of 0.38 is very high — anything above 0.1 is considered poor. The layout shifts were coming from two sources:</p>
+
+      <ul>
+        <li><strong>Images without width/height attributes</strong> — the browser doesn't know how much space to reserve, so it reserves none, then the image loads and pushes everything down</li>
+        <li><strong>A cookie consent bar</strong> that appeared 800ms after page load and pushed all the content down</li>
+        <li><strong>Google Fonts loading asynchronously</strong> and causing a font swap mid-render</li>
+      </ul>
+
+      <h3>Fix 3a — Add explicit dimensions to all images</h3>
+
+      <div class="code-block"><span class="comment">&lt;!-- Before (causes CLS) --&gt;</span>
+&lt;img src="<span class="val">photo.jpg</span>" alt="<span class="val">...</span>"&gt;
+
+<span class="comment">&lt;!-- After (no CLS) --&gt;</span>
+&lt;img src="<span class="val">photo.jpg</span>" alt="<span class="val">...</span>" <span class="key">width</span>="<span class="val">800</span>" <span class="key">height</span>="<span class="val">533</span>"&gt;</div>
+
+      <h3>Fix 3b — Reserve space for the cookie bar</h3>
+      <p>The cookie consent plugin had an option to show as a fixed bottom bar instead of pushing content. Switched to that. CLS from the cookie bar went to zero.</p>
+
+      <h3>Fix 3c — Preload and swap fonts properly</h3>
+
+      <div class="code-block"><span class="comment">&lt;!-- Add font-display: swap to prevent invisible text --&gt;</span>
+&lt;link href="<span class="val">https://fonts.googleapis.com/css2?family=...&amp;display=swap</span>"
+      rel="<span class="val">preload</span>" as="<span class="val">style</span>" onload="<span class="val">this.rel='stylesheet'</span>"&gt;</div>
+
+      <p>CLS went from 0.38 to 0.02 — well within the "good" threshold.</p>
+
+      <div class="divider"></div>
+
+      <h2>The order matters</h2>
+
+      <p>One thing I want to emphasize: the order in which you fix these things matters. I always fix TTFB first (server-side caching), then LCP (image loading), then CLS (layout stability). If you fix LCP before fixing TTFB, the caching layer might interfere with your preload headers.</p>
+
+      <div class="callout">
+        <div class="callout-label">Final results</div>
+        <p>PageSpeed mobile: 45 → 92. LCP: 7.2s → 2.1s. TTFB: 1,840ms → 320ms. CLS: 0.38 → 0.02. Total time to implement: about 6 hours of focused work spread across two days (audit, changes, testing, verifying with real devices).</p>
+      </div>
+
+      <p>If you're working on a WordPress site and your CWV scores are poor, start with the waterfall chart, not the opportunities list. The waterfall will show you exactly what's slow and in what order — that's where the real audit begins.</p>
+
+    </div>
+  </div>
+</article>
+
+<section class="related-posts">
+  <div class="container-wide">
+    <div class="related-title">Continue reading</div>
+    <div class="related-grid">
+      <a href="screaming-frog-technical-seo-audit.html" class="related-card">
+        <div class="related-cat">Technical SEO</div>
+        <div class="related-name">Setting up Screaming Frog for a full technical SEO audit</div>
+        <div class="related-arrow">Read article →</div>
+      </a>
+      <a href="wordpress-vs-custom-html-seo.html" class="related-card">
+        <div class="related-cat">WordPress · SEO</div>
+        <div class="related-name">WordPress vs custom HTML for SEO: what actually matters</div>
+        <div class="related-arrow">Read article →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">© 2025 <span>Sergio Carrión</span> · <a href="../index.html" style="color:var(--muted);text-decoration:none;">Back to portfolio</a></div>
+  <div class="footer-copy">Web Developer & SEO Specialist</div>
+</footer>
+
+</body>
+</html>

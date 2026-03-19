@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The WordPress vs custom HTML debate misses the point. Here's what Google actually cares about — and how to get it right regardless of what you're building on.">
+<meta name="keywords" content="wordpress seo vs html, wordpress seo performance, custom html seo, wordpress vs static site seo, best platform for seo, wordpress seo technical">
+<meta property="og:title" content="WordPress vs custom HTML for SEO: what actually matters — Sergio Carrión">
+<meta property="og:description" content="The platform debate misses the point. Here's what Google actually cares about — and how to get it right on any platform.">
+<meta property="og:type" content="article">
+<meta name="author" content="Sergio Carrión">
+<link rel="canonical" href="https://sergio-carrion.github.io/blog/wordpress-vs-custom-html-seo.html">
+<title>WordPress vs custom HTML for SEO: what actually matters — Sergio Carrión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0c0e; --bg2: #111114; --bg3: #18181c; --surface: #1e1e24;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #e8e6e1; --muted: #7a7870; --accent: #4ade80; --accent-dim: rgba(74,222,128,0.1);
+    --serif: 'DM Serif Display', serif; --mono: 'DM Mono', monospace; --sans: 'Syne', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 48px; display: flex; justify-content: space-between; align-items: center;
+    background: rgba(12,12,14,0.92); border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.1em; text-decoration: none; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .article-hero { padding: 140px 0 80px; border-bottom: 1px solid var(--border); }
+  .container { max-width: 760px; margin: 0 auto; padding: 0 48px; }
+  .container-wide { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 40px; transition: color 0.2s; }
+  .back-link:hover { color: var(--accent); }
+
+  .article-category { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 20px; }
+  .article-title { font-family: var(--serif); font-size: clamp(36px, 5vw, 58px); line-height: 1.08; color: var(--text); margin-bottom: 24px; }
+  .article-title em { font-style: italic; color: var(--accent); }
+  .article-meta { display: flex; gap: 24px; align-items: center; font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 24px; border-top: 1px solid var(--border); }
+
+  .article-body { padding: 64px 0; }
+  .article-body h2 { font-family: var(--serif); font-size: 30px; color: var(--text); margin: 56px 0 20px; line-height: 1.2; }
+  .article-body h3 { font-family: var(--sans); font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.15em; margin: 36px 0 12px; text-transform: uppercase; }
+  .article-body p { font-size: 16px; line-height: 1.85; color: #c4c2bc; margin-bottom: 20px; }
+  .article-body strong { color: var(--text); font-weight: 600; }
+  .article-body em { color: var(--accent); font-style: italic; }
+  .article-body ul, .article-body ol { margin: 20px 0 20px 24px; }
+  .article-body li { font-size: 16px; line-height: 1.85; color: #c4c2bc; margin-bottom: 8px; }
+  .article-body li::marker { color: var(--accent); }
+
+  .callout { background: var(--accent-dim); border: 1px solid rgba(74,222,128,0.2); border-left: 3px solid var(--accent); padding: 20px 24px; margin: 32px 0; }
+  .callout p { margin: 0; color: var(--text); font-size: 15px; }
+  .callout-label { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 32px 0; }
+  .compare-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; }
+  .compare-card.winner { border-color: rgba(74,222,128,0.3); }
+  .compare-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .compare-title { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); }
+  .compare-badge { font-family: var(--mono); font-size: 10px; padding: 3px 8px; }
+  .compare-badge.win { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(74,222,128,0.2); }
+  .compare-badge.tie { color: var(--muted); background: var(--bg3); border: 1px solid var(--border); }
+  .compare-item { display: flex; gap: 8px; font-size: 13px; color: var(--muted); margin-bottom: 8px; align-items: flex-start; }
+  .compare-item::before { content: '→'; color: var(--accent); font-family: var(--mono); font-size: 11px; flex-shrink: 0; margin-top: 3px; }
+
+  .verdict-row { display: grid; grid-template-columns: 1fr 80px 80px; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: center; font-size: 14px; }
+  .verdict-row:last-child { border-bottom: none; }
+  .verdict-label { color: var(--text); }
+  .verdict-cell { font-family: var(--mono); font-size: 12px; text-align: center; padding: 4px 8px; }
+  .verdict-cell.green { color: var(--accent); background: var(--accent-dim); }
+  .verdict-cell.yellow { color: #f9c86a; background: rgba(239,159,39,0.1); }
+  .verdict-cell.red { color: #f09595; background: rgba(226,75,74,0.08); }
+  .verdict-header { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; }
+
+  .divider { width: 100%; height: 1px; background: var(--border); margin: 48px 0; }
+
+  .related-posts { background: var(--bg2); border-top: 1px solid var(--border); padding: 80px 0; }
+  .related-title { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px; }
+  .related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .related-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; text-decoration: none; color: inherit; display: block; transition: border-color 0.2s, transform 0.2s; }
+  .related-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .related-cat { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .related-name { font-family: var(--serif); font-size: 20px; color: var(--text); line-height: 1.3; margin-bottom: 8px; }
+  .related-arrow { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 16px; }
+
+  footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .footer-copy span { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .container, .container-wide { padding: 0 24px; }
+    .article-hero { padding: 100px 0 60px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .related-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">SC_DEV</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#projects">Projects</a></li>
+    <li><a href="../index.html#blog">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article>
+  <div class="article-hero">
+    <div class="container">
+      <a href="../index.html#blog" class="back-link">← Back to blog</a>
+      <div class="article-category">WordPress · SEO · Strategy</div>
+      <h1 class="article-title">WordPress vs custom HTML for SEO:<br><em>what actually matters</em></h1>
+      <div class="article-meta">
+        <span>Sergio Carrión</span>
+        <span>·</span>
+        <span>5 min read</span>
+        <span>·</span>
+        <span>SEO Strategy</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-body">
+    <div class="container">
+
+      <p>Every few months someone publishes a new take on "WordPress vs static HTML for SEO" and the debate rages again. Custom HTML is faster. WordPress has better plugins. Static sites win on Core Web Vitals. WordPress wins on content management.</p>
+
+      <p>Most of these arguments are missing the point. After building and maintaining WordPress sites professionally for US clients, here's the honest answer: <strong>the platform is not the ranking factor. Your execution is.</strong></p>
+
+      <h2>What Google actually ranks on</h2>
+
+      <p>Google evaluates pages on a handful of things that have nothing to do with whether you used WordPress or wrote raw HTML:</p>
+
+      <ul>
+        <li><strong>Page experience</strong> — Core Web Vitals (LCP, CLS, INP), mobile usability, HTTPS</li>
+        <li><strong>Content relevance</strong> — does this page actually answer the search query better than competitors?</li>
+        <li><strong>Authority</strong> — do other trustworthy sites link to you?</li>
+        <li><strong>Technical accessibility</strong> — can Googlebot crawl, render, and index your pages without issues?</li>
+      </ul>
+
+      <p>None of those say "WordPress" or "custom HTML." A well-optimized WordPress site will outrank a poorly-built custom HTML site every time, and vice versa.</p>
+
+      <h2>Where custom HTML wins</h2>
+
+      <div class="compare-grid">
+        <div class="compare-card winner">
+          <div class="compare-header">
+            <span class="compare-title">Custom HTML</span>
+            <span class="compare-badge win">Advantage</span>
+          </div>
+          <div class="compare-item">Zero bloat by default — you write exactly what you need</div>
+          <div class="compare-item">No PHP execution overhead — pure static files</div>
+          <div class="compare-item">No plugin conflicts breaking your layout at 2am</div>
+          <div class="compare-item">Easier to achieve perfect Lighthouse scores</div>
+          <div class="compare-item">Hosting is trivially simple (GitHub Pages, Netlify, Vercel)</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-header">
+            <span class="compare-title">WordPress</span>
+            <span class="compare-badge tie">Context-dependent</span>
+          </div>
+          <div class="compare-item">Requires caching to avoid slow TTFB</div>
+          <div class="compare-item">Plugin bloat can destroy performance if unchecked</div>
+          <div class="compare-item">Default themes load unnecessary CSS/JS</div>
+          <div class="compare-item">More surface area for security issues</div>
+          <div class="compare-item">Database queries on every uncached request</div>
+        </div>
+      </div>
+
+      <p>On a head-to-head technical comparison of a clean build, custom HTML wins on performance. This portfolio you're reading right now is pure HTML — it scores 98+ on mobile PageSpeed with zero configuration.</p>
+
+      <h2>Where WordPress wins</h2>
+
+      <p>The performance advantage of custom HTML disappears the moment you need to manage content at scale. Consider what WordPress gives you:</p>
+
+      <ul>
+        <li><strong>Non-technical editors can publish content</strong> without touching code — this matters enormously for blog-driven SEO strategies</li>
+        <li><strong>Programmatic SEO is possible</strong> with custom post types and dynamic templates — you can generate hundreds of location pages from a single template</li>
+        <li><strong>Yoast/RankMath integration</strong> handles meta tags, sitemaps, and schema markup with a UI that your client can use themselves</li>
+        <li><strong>WooCommerce, membership sites, complex forms</strong> — things that would take weeks to build from scratch</li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-label">The real question</div>
+        <p>The question isn't "which platform is better for SEO." The question is: "which platform lets me build and maintain the best possible version of this site for this use case?" For most business sites that need regular content updates, that's WordPress — but only if it's configured correctly.</p>
+      </div>
+
+      <h2>The verdict by use case</h2>
+
+      <div style="margin:32px 0;">
+        <div class="verdict-row" style="border-bottom:1px solid var(--border2);">
+          <div class="verdict-label" style="font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Use case</div>
+          <div class="verdict-header">WordPress</div>
+          <div class="verdict-header">Custom HTML</div>
+        </div>
+        <div class="verdict-row">
+          <div class="verdict-label">Portfolio / personal site</div>
+          <div class="verdict-cell yellow">OK</div>
+          <div class="verdict-cell green">Better</div>
+        </div>
+        <div class="verdict-row">
+          <div class="verdict-label">Blog with frequent posts</div>
+          <div class="verdict-cell green">Better</div>
+          <div class="verdict-cell yellow">Harder</div>
+        </div>
+        <div class="verdict-row">
+          <div class="verdict-label">Business site (team edits content)</div>
+          <div class="verdict-cell green">Better</div>
+          <div class="verdict-cell red">Wrong tool</div>
+        </div>
+        <div class="verdict-row">
+          <div class="verdict-label">Landing page / single page</div>
+          <div class="verdict-cell yellow">OK</div>
+          <div class="verdict-cell green">Better</div>
+        </div>
+        <div class="verdict-row">
+          <div class="verdict-label">E-commerce</div>
+          <div class="verdict-cell green">WooCommerce</div>
+          <div class="verdict-cell red">Build from scratch</div>
+        </div>
+        <div class="verdict-row">
+          <div class="verdict-label">Programmatic SEO (100s of pages)</div>
+          <div class="verdict-cell green">Custom post types</div>
+          <div class="verdict-cell yellow">Possible but complex</div>
+        </div>
+      </div>
+
+      <h2>How to make WordPress perform like custom HTML</h2>
+
+      <p>If you're on WordPress and want to close the performance gap, these are the levers that actually move the needle:</p>
+
+      <ol>
+        <li><strong>Full-page caching</strong> — WP Rocket or W3 Total Cache. Without this, every request runs PHP. With it, WordPress serves static HTML files identical to a custom site.</li>
+        <li><strong>Disable plugins on pages that don't need them</strong> — Asset CleanUp lets you disable scripts and styles per post type. A homepage doesn't need WooCommerce JavaScript.</li>
+        <li><strong>Use a lightweight theme as a base</strong> — GeneratePress or Kadence. Both have sub-50KB front-end weight out of the box.</li>
+        <li><strong>Serve static assets from a CDN</strong> — Cloudflare free tier is enough for most sites. This handles global latency and TTFB.</li>
+        <li><strong>Eliminate render-blocking resources</strong> — WordPress has a bad habit of loading everything in the head. Move non-critical CSS and JS to deferred or async loading.</li>
+      </ol>
+
+      <p>A WordPress site with these five things in place will score 90+ on mobile PageSpeed. That's equivalent to a well-built custom HTML site — and it comes with a CMS your client can actually use.</p>
+
+      <div class="divider"></div>
+
+      <h2>The bottom line</h2>
+
+      <p>Platform choice is a decision about workflow and maintainability, not a SEO decision. Google doesn't rank WordPress or custom HTML — it ranks pages that load fast, are crawlable, contain relevant content, and have earned authority.</p>
+
+      <p>Stop debating the platform. Start optimizing what the platform produces.</p>
+
+      <div class="callout">
+        <div class="callout-label">What I do in practice</div>
+        <p>For client business sites that need content updates: WordPress with WP Rocket, a lightweight theme, and a proper technical SEO setup. For my own tools, demos, and portfolio: custom HTML or static generation. The right tool for the job — not dogma.</p>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<section class="related-posts">
+  <div class="container-wide">
+    <div class="related-title">Continue reading</div>
+    <div class="related-grid">
+      <a href="core-web-vitals-wordpress-optimization.html" class="related-card">
+        <div class="related-cat">Performance · SEO</div>
+        <div class="related-name">How I improved Core Web Vitals from 45 to 92 on a WordPress site</div>
+        <div class="related-arrow">Read article →</div>
+      </a>
+      <a href="screaming-frog-technical-seo-audit.html" class="related-card">
+        <div class="related-cat">Technical SEO</div>
+        <div class="related-name">Setting up Screaming Frog for a full technical SEO audit</div>
+        <div class="related-arrow">Read article →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">© 2025 <span>Sergio Carrión</span> · <a href="../index.html" style="color:var(--muted);text-decoration:none;">Back to portfolio</a></div>
+  <div class="footer-copy">Web Developer & SEO Specialist</div>
+</footer>
+
+</body>
+</html>
