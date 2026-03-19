@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sergio Carrión — Web Developer & SEO Specialist. Building high-performance WordPress sites and driving organic growth for US-based companies. Remote from Ecuador.">
+<meta name="keywords" content="wordpress developer remote, technical seo specialist, freelance web developer, core web vitals optimization, wordpress seo developer, web developer ecuador">
+<meta property="og:title" content="Sergio Carrión — Web Developer & SEO Specialist">
+<meta property="og:description" content="Building high-performance websites and driving organic growth. 3+ years working remotely with US companies.">
+<title>Sergio Carrión — Web Developer & SEO Specialist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0e;
+    --bg2: #111114;
+    --bg3: #18181c;
+    --surface: #1e1e24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8e6e1;
+    --muted: #7a7870;
+    --accent: #4ade80;
+    --accent2: #22c55e;
+    --accent-dim: rgba(74,222,128,0.1);
+    --accent-glow: rgba(74,222,128,0.15);
+    --serif: 'DM Serif Display', serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  body.cursor-outside { cursor: auto; }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.3s;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(74,222,128,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  .cursor-ring.expanded { width: 60px; height: 60px; }
+  .cursor.visible { opacity: 1; }
+  .cursor-ring.visible { opacity: 0.6; }
+  .cursor-ring.visible.expanded { opacity: 0.4; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 24px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid transparent;
+    transition: background 0.4s, border-color 0.4s, padding 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(12,12,14,0.92);
+    border-color: var(--border);
+    backdrop-filter: blur(12px);
+    padding: 16px 48px;
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* Sections base */
+  section { padding: 120px 0; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 80px;
+    align-items: center;
+    width: 100%;
+    padding-top: 80px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(56px, 7vw, 88px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.35s forwards;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-role {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.5s forwards;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 520px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.65s forwards;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.8s forwards;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: #0c0c0e;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none; cursor: none;
+    transition: background 0.2s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-primary:hover { background: #86efac; transform: translateY(-2px); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    cursor: none;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* Hero stats card */
+  .hero-stats {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    padding: 40px 36px;
+    opacity: 0;
+    animation: fadeLeft 0.9s ease 0.6s forwards;
+    position: relative;
+  }
+  .hero-stats::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .stat-item { margin-bottom: 36px; }
+  .stat-item:last-child { margin-bottom: 0; }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 48px;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .stat-number span { color: var(--accent); }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .stat-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+  }
+
+  /* Available badge */
+  .available-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(74,222,128,0.2);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 40px;
+  }
+  .available-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease infinite;
+  }
+
+  /* Background grid lines */
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .bg-glow {
+    position: absolute;
+    top: 20%; left: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(74,222,128,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── ABOUT ── */
+  #about { background: var(--bg2); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 52px);
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  .about-text {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .skill-category {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-category::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--accent);
+  }
+
+  .skill-cat-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .skill-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+
+  .skill-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--bg); }
+
+  .projects-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: none;
+  }
+  .project-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-4px);
+  }
+  .project-card:hover .project-arrow { transform: translate(4px, -4px); color: var(--accent); }
+  .project-card.featured {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-glow) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .project-card:hover::after { opacity: 1; }
+
+  .project-number {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+  }
+
+  .project-type {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(74,222,128,0.15);
+    padding: 4px 10px;
+    margin-bottom: 16px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .project-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .project-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .project-results {
+    display: flex; gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .result-item { }
+  .result-number {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .result-label {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+  .project-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+  }
+
+  .project-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .project-link:hover { color: var(--accent); }
+
+  .project-arrow {
+    font-size: 14px;
+    transition: transform 0.3s, color 0.3s;
+    display: inline-block;
+  }
+
+  .project-visual {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    aspect-ratio: 16/10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-visual-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .visual-url {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.6;
+  }
+
+  .visual-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 40px;
+  }
+  .visual-bar {
+    width: 8px;
+    background: var(--accent);
+    opacity: 0.3;
+    border-radius: 2px 2px 0 0;
+    animation: barGrow 1.5s ease infinite alternate;
+  }
+  .visual-bar:nth-child(1) { height: 60%; animation-delay: 0s; }
+  .visual-bar:nth-child(2) { height: 80%; animation-delay: 0.1s; }
+  .visual-bar:nth-child(3) { height: 45%; animation-delay: 0.2s; }
+  .visual-bar:nth-child(4) { height: 100%; animation-delay: 0.3s; }
+  .visual-bar:nth-child(5) { height: 65%; animation-delay: 0.4s; }
+  .visual-bar:nth-child(6) { height: 90%; animation-delay: 0.5s; }
+  .visual-bar:nth-child(7) { height: 50%; animation-delay: 0.6s; }
+
+  /* ── BLOG ── */
+  #blog { background: var(--bg2); }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .blog-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 32px;
+    cursor: none;
+    transition: border-color 0.3s, transform 0.3s;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+  .blog-card:hover { border-color: var(--border2); transform: translateY(-4px); }
+
+  .blog-category {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .blog-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .blog-excerpt {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .blog-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .blog-read {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 11px;
+    font-family: var(--mono);
+    display: flex; align-items: center; gap: 4px;
+    transition: gap 0.2s;
+  }
+  .blog-card:hover .blog-read { gap: 8px; }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--bg);
+    text-align: center;
+  }
+
+  .contact-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .contact-email {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 44px);
+    color: var(--text);
+    text-decoration: none;
+    display: inline-block;
+    margin: 32px 0 48px;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 8px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .contact-email:hover { color: var(--accent); border-color: var(--accent); }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 64px;
+  }
+
+  .contact-link {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .contact-link:hover { color: var(--accent); }
+  .contact-link::before { content: '↗'; font-size: 10px; }
+
+  .contact-location {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .footer-copy span { color: var(--accent); }
+
+  .footer-stack {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  @keyframes barGrow {
+    from { opacity: 0.2; }
+    to { opacity: 0.6; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .container { padding: 0 24px; }
+    section { padding: 80px 0; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-stats { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+    .project-visual { display: none; }
+    .blog-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">SC_DEV</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="available-badge">
+          <div class="available-dot"></div>
+          Available for remote work
+        </div>
+        <div class="hero-eyebrow">Web Developer & SEO Specialist</div>
+        <h1 class="hero-name">Sergio<br><em>Carrión</em></h1>
+        <p class="hero-role">Building fast websites that rank.</p>
+        <p class="hero-desc">
+          I combine hands-on front-end development with deep technical SEO expertise —
+          so the sites I build don't just look good, they perform and get found.
+          3+ years working remotely with US-based companies from Cuenca, Ecuador.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn-primary">View My Work <span>↓</span></a>
+          <a href="#contact" class="btn-outline">Get In Touch</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">3<span>+</span></div>
+          <div class="stat-label">Years of remote experience</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Production sites maintained</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">35<span>%</span></div>
+          <div class="stat-label">Avg. page speed improvement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="section-label">About me</div>
+        <h2 class="section-title">Developer who<br>thinks in <em>rankings</em></h2>
+        <p class="about-text">
+          Most developers hand off a site and move on. I stay — because I know
+          that a fast, technically sound website is the foundation of any SEO strategy.
+          I build WordPress sites from scratch, fix what's broken under the hood,
+          and make sure Google can actually read and rank them.
+        </p>
+        <p class="about-text">
+          My edge is the hybrid skillset: I can audit a site with Screaming Frog,
+          trace a Core Web Vitals failure back to a specific plugin, fix it in PHP,
+          and then write the content brief that targets the right keyword cluster.
+          I do all of that — in one person.
+        </p>
+        <p class="about-text">
+          Currently working remotely with Cinch Home Buyers (Cary, NC, USA),
+          building and maintaining their full web presence.
+        </p>
+      </div>
+      <div class="skills-grid reveal reveal-delay-2">
+        <div class="skill-category">
+          <div class="skill-cat-title">Development</div>
+          <div class="skill-tags">
+            <span class="skill-tag">WordPress</span>
+            <span class="skill-tag">PHP</span>
+            <span class="skill-tag">HTML5</span>
+            <span class="skill-tag">CSS3</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">REST APIs</span>
+            <span class="skill-tag">Responsive Design</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-cat-title">Technical SEO</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Core Web Vitals</span>
+            <span class="skill-tag">Structured Data</span>
+            <span class="skill-tag">Crawl Optimization</span>
+            <span class="skill-tag">Site Architecture</span>
+            <span class="skill-tag">On-page SEO</span>
+            <span class="skill-tag">Link Building</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-cat-title">Tools</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Screaming Frog</span>
+            <span class="skill-tag">Sitebulb</span>
+            <span class="skill-tag">GA4</span>
+            <span class="skill-tag">GSC</span>
+            <span class="skill-tag">Ahrefs</span>
+            <span class="skill-tag">GTM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="projects-header reveal">
+      <div>
+        <div class="section-label">Selected work</div>
+        <h2 class="section-title">Projects</h2>
+      </div>
+    </div>
+    <div class="projects-grid">
+
+      <!-- Featured Project -->
+      <div class="project-card featured reveal">
+        <div>
+          <div class="project-number">01 — Featured</div>
+          <div class="project-type">WordPress · SEO · Performance</div>
+          <h3 class="project-name">Cinch Home Buyers</h3>
+          <p class="project-desc">
+            Main marketing site for a US real estate company. I own the full stack —
+            from WordPress theme development and custom plugin work, to technical SEO,
+            Core Web Vitals optimization, and ongoing content strategy.
+          </p>
+          <div class="project-results">
+            <div class="result-item">
+              <div class="result-number">35%</div>
+              <div class="result-label">Faster load time</div>
+            </div>
+            <div class="result-item">
+              <div class="result-number">60%</div>
+              <div class="result-label">Fewer crawl errors</div>
+            </div>
+            <div class="result-item">
+              <div class="result-number">15+</div>
+              <div class="result-label">Keywords top 5</div>
+            </div>
+          </div>
+          <div class="project-tags">
+            <span class="project-tag">WordPress</span>
+            <span class="project-tag">PHP</span>
+            <span class="project-tag">Technical SEO</span>
+            <span class="project-tag">Core Web Vitals</span>
+            <span class="project-tag">Link Building</span>
+          </div>
+          <a href="https://cinchhomebuyers.com" target="_blank" class="project-link">
+            cinchhomebuyers.com <span class="project-arrow">↗</span>
+          </a>
+        </div>
+        <div class="project-visual">
+          <div class="project-visual-inner">
+            <div class="visual-url">cinchhomebuyers.com</div>
+            <div class="visual-bars">
+              <div class="visual-bar"></div>
+              <div class="visual-bar"></div>
+              <div class="visual-bar"></div>
+              <div class="visual-bar"></div>
+              <div class="visual-bar"></div>
+              <div class="visual-bar"></div>
+              <div class="visual-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-number">02</div>
+        <div class="project-type">WordPress · Conversion</div>
+        <h3 class="project-name">Offers Platform</h3>
+        <p class="project-desc">
+          Lead capture platform built on WordPress with conversion-focused UX,
+          structured data markup for local SEO, and custom form integrations
+          to route leads directly into the CRM pipeline.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">WordPress</span>
+          <span class="project-tag">Schema.org</span>
+          <span class="project-tag">Local SEO</span>
+          <span class="project-tag">CRO</span>
+        </div>
+        <a href="https://offers.cinchhomebuyers.com" target="_blank" class="project-link">
+          offers.cinchhomebuyers.com <span class="project-arrow">↗</span>
+        </a>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-number">03</div>
+        <div class="project-type">Dashboard · Integrations</div>
+        <h3 class="project-name">Affinity Dash</h3>
+        <p class="project-desc">
+          Internal operations dashboard for the Cinch team. Custom WordPress
+          solution with role-based access control, API integrations across
+          multiple platforms, and real-time data display.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">WordPress</span>
+          <span class="project-tag">REST API</span>
+          <span class="project-tag">JavaScript</span>
+          <span class="project-tag">Custom Roles</span>
+        </div>
+        <a href="https://affinitydash.com" target="_blank" class="project-link">
+          affinitydash.com <span class="project-arrow">↗</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:64px;">
+      <div class="section-label">Insights</div>
+      <h2 class="section-title">Writing</h2>
+    </div>
+    <div class="blog-grid">
+
+      <a href="blog/core-web-vitals-wordpress-optimization.html" class="blog-card reveal reveal-delay-1">
+        <div class="blog-category">Performance · SEO</div>
+        <h3 class="blog-title">How I improved Core Web Vitals from 45 to 92 on a WordPress site</h3>
+        <p class="blog-excerpt">
+          A real audit walkthrough — the exact plugins causing LCP failures,
+          the caching config that fixed TTFB, and the image pipeline that eliminated CLS.
+        </p>
+        <div class="blog-meta">
+          <span>8 min read</span>
+          <span class="blog-read">Read article →</span>
+        </div>
+      </a>
+
+      <a href="blog/screaming-frog-technical-seo-audit.html" class="blog-card reveal reveal-delay-2">
+        <div class="blog-category">Technical SEO</div>
+        <h3 class="blog-title">Setting up Screaming Frog for a full technical SEO audit</h3>
+        <p class="blog-excerpt">
+          The exact configuration I use on every new client — custom extraction rules,
+          crawl settings for large sites, and what to look for first in the reports.
+        </p>
+        <div class="blog-meta">
+          <span>6 min read</span>
+          <span class="blog-read">Read article →</span>
+        </div>
+      </a>
+
+      <a href="blog/wordpress-vs-custom-html-seo.html" class="blog-card reveal reveal-delay-3">
+        <div class="blog-category">WordPress · SEO</div>
+        <h3 class="blog-title">WordPress vs custom HTML for SEO: what actually matters</h3>
+        <p class="blog-excerpt">
+          The platform debate misses the point. Here's what Google actually
+          cares about — and how to get it right regardless of what you're building on.
+        </p>
+        <div class="blog-meta">
+          <span>5 min read</span>
+          <span class="blog-read">Read article →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner reveal">
+      <div class="section-label" style="justify-content:center;">Let's work together</div>
+      <h2 class="section-title" style="font-size:clamp(40px,5vw,64px);">Got a project<br>in mind?</h2>
+      <a href="/cdn-cgi/l/email-protection#99eaf0fef0ffebfcfdf0f7a8abaad9fef4f8f0f5b7faf6f4" class="contact-email">
+        <span class="__cf_email__" data-cfemail="512238363837233435383f60636211363c30383d7f323e3c">[email&#160;protected]</span>
+      </a>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/sergio-carrion-pati%C3%B1o-0603212a9/" target="_blank" class="contact-link">LinkedIn</a>
+        <a href="https://github.com/SergioCarrion23" target="_blank" class="contact-link">GitHub</a>
+      </div>
+      <div class="contact-location">
+        📍 Cuenca, Ecuador — Available worldwide, remote-first
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">
+    © 2025 <span>Sergio Carrión</span>. Built with HTML, CSS & attention to detail.
+  </div>
+  <div class="footer-stack">
+    <a href="https://github.com/SergioCarrion23" target="_blank" style="color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:11px;">github.com/SergioCarrion23</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Custom cursor — hidden until first move to avoid stuck corner
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = -999, my = -999, rx = -999, ry = -999, moved = false;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    if (!moved) {
+      moved = true;
+      cursor.classList.add('visible');
+      ring.classList.add('visible');
+      rx = mx; ry = my;
+    }
+  });
+
+  document.addEventListener('mouseleave', () => {
+    cursor.classList.remove('visible');
+    ring.classList.remove('visible');
+    document.body.classList.add('cursor-outside');
+  });
+  document.addEventListener('mouseenter', () => {
+    if (moved) {
+      cursor.classList.add('visible');
+      ring.classList.add('visible');
+    }
+    document.body.classList.remove('cursor-outside');
+  });
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const animRing = () => {
+    rx = lerp(rx, mx, 0.12);
+    ry = lerp(ry, my, 0.12);
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  };
+  animRing();
+
+  document.querySelectorAll('a, button, .project-card, .blog-card, .skill-tag').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('expanded'));
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
